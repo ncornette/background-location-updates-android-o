@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.v4.app.TaskStackBuilder;
 import android.app.NotificationChannel;
@@ -50,11 +51,13 @@ class LocationResultHelper {
         mContext = context;
         mLocations = locations;
 
-        NotificationChannel channel = new NotificationChannel(PRIMARY_CHANNEL,
-                context.getString(R.string.default_channel), NotificationManager.IMPORTANCE_DEFAULT);
-        channel.setLightColor(Color.GREEN);
-        channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
-        getNotificationManager().createNotificationChannel(channel);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(PRIMARY_CHANNEL,
+                    context.getString(R.string.default_channel), NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setLightColor(Color.GREEN);
+            channel.setLockscreenVisibility(Notification.VISIBILITY_PRIVATE);
+            getNotificationManager().createNotificationChannel(channel);
+        }
     }
 
     /**
@@ -135,8 +138,17 @@ class LocationResultHelper {
         PendingIntent notificationPendingIntent =
                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        Notification.Builder notificationBuilder = new Notification.Builder(mContext,
-                PRIMARY_CHANNEL)
+
+        Notification.Builder builder;
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            builder = new Notification.Builder(mContext,
+                    PRIMARY_CHANNEL);
+        } else {
+            builder = new Notification.Builder(mContext);
+        }
+
+        Notification.Builder notificationBuilder = builder
                 .setContentTitle(getLocationResultTitle())
                 .setContentText(getLocationResultText())
                 .setSmallIcon(R.mipmap.ic_launcher)

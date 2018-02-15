@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="location_priorities">
+        <item>PRIORITY_BALANCED_POWER_ACCURACY</item>
+        <item>PRIORITY_HIGH_ACCURACY</item>
+        <item>PRIORITY_LOW_POWER</item>
+        <item>PRIORITY_NO_POWER</item>
+    </string-array>
+</resources>

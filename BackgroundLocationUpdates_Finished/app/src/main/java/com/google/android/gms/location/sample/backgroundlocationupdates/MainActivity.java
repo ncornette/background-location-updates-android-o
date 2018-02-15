@@ -15,23 +15,25 @@
  */
 package com.google.android.gms.location.sample.backgroundlocationupdates;
 
+import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
 import android.support.design.widget.Snackbar;
-import android.Manifest;
+import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -44,13 +46,13 @@ import com.google.android.gms.location.LocationServices;
 /**
  * The only activity in this sample. Displays UI widgets for requesting and removing location
  * updates, and for the batched location updates that are reported.
- *
+ * <p>
  * Location updates requested through this activity continue even when the activity is not in the
  * foreground. Note: apps running on "O" devices (regardless of targetSdkVersion) may receive
  * updates less frequently than the interval specified in the {@link LocationRequest} when the app
  * is no longer in the foreground.
  */
-public class MainActivity extends FragmentActivity implements GoogleApiClient.ConnectionCallbacks,
+public class MainActivity extends AppCompatActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -94,6 +96,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
 
         mRequestUpdatesButton = (Button) findViewById(R.id.request_updates_button);
         mRemoveUpdatesButton = (Button) findViewById(R.id.remove_updates_button);
@@ -142,19 +145,20 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
      * These settings are appropriate for mapping applications that show real-time location
      * updates.
      */
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
+    public static LocationRequest createLocationRequest() {
+        LocationRequest locationRequest = new LocationRequest();
 
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        locationRequest.setInterval(UPDATE_INTERVAL);
 
         // Sets the fastest rate for active location updates. This interval is exact, and your
         // application will never receive updates faster than this value.
-        mLocationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        locationRequest.setFastestInterval(FASTEST_UPDATE_INTERVAL);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
 
         // Sets the maximum time when batched location updates are delivered. Updates may be
         // delivered sooner than this interval.
-        mLocationRequest.setMaxWaitTime(MAX_WAIT_TIME);
+        locationRequest.setMaxWaitTime(MAX_WAIT_TIME);
+        return locationRequest;
     }
 
     /**
@@ -173,7 +177,22 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
                 .enableAutoManage(this, this)
                 .addApi(LocationServices.API)
                 .build();
-        createLocationRequest();
+        mLocationRequest = createLocationRequest();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == R.id.action_configure) {
+            LocationSettingsActivity.start(this);
+            return true;
+        }
+        return false;
     }
 
     @Override
@@ -326,7 +345,7 @@ public class MainActivity extends FragmentActivity implements GoogleApiClient.Co
             LocationServices.FusedLocationApi.requestLocationUpdates(
                     mGoogleApiClient, mLocationRequest, getPendingIntent());
         } catch (SecurityException e) {
-           LocationRequestHelper.setRequesting(this, false);
+            LocationRequestHelper.setRequesting(this, false);
             e.printStackTrace();
         }
     }

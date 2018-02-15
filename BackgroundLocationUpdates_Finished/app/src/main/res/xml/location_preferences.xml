@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Logging"
+        android:key="pref_key_location_logging_settings">
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="pref_key_notify"
+            android:persistent="false"
+            android:summary="Send Location Update Notifications"
+            android:title="Notifications" />
+        <Preference
+            android:key="pref_key_show_logs"
+            android:summary="Show Recent Location Updates"
+            android:title="Logs" />
+        <Preference
+            android:key="pref_key_mms_delete_limit"
+            android:summary="Blah"
+            android:title="Blah" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory
+        android:title="Configuration"
+        android:key="pref_key_location_config_settings">
+        <com.google.android.gms.location.sample.backgroundlocationupdates.EditTextPreferenceWithValue
+            android:key="pref_key_interval"
+            android:summary="Set the desired interval for active location updates, in milliseconds."
+            android:title="Interval" />
+        <com.google.android.gms.location.sample.backgroundlocationupdates.EditTextPreferenceWithValue
+            android:key="pref_key_fastest_interval"
+            android:summary="Explicitly set the fastest interval for location updates, in milliseconds."
+            android:title="Fastest Interval" />
+        <EditTextPreference
+            android:key="pref_key_smallest_displacement"
+            android:summary="Set the minimum displacement between location updates in meters."
+            android:title="Smallest Displacement" />
+        <ListPreference
+            android:key="pref_key_show_logs"
+            android:summary="Set the priority of the request."
+            android:entryValues="@array/location_priorities"
+            android:title="Priority" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

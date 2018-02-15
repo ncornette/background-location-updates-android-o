@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.flipcards.flipcards3d.CardsActivity">
+    <item
+        android:id="@+id/action_configure"
+        android:orderInCategory="1"
+        android:title="Configure"
+        android:icon="@drawable/common_full_open_on_phone"
+        app:showAsAction="ifRoom" />
+</menu>
